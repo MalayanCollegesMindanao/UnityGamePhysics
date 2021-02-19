@@ -19,6 +19,7 @@ public class RocketEngine : MonoBehaviour
     void Start()
     {
         physicsEngine = GetComponent<PhysicsEngine>();
+        physicsEngine.mass += fuelMass;
     }
 
     void FixedUpdate()
@@ -35,13 +36,16 @@ public class RocketEngine : MonoBehaviour
     }
 
     void ExertForce () {
-        currentThrust = thrustPercent * maxThrust * 1000f;
-        Vector3 thrustVector = thrustUnitVector.normalized * currentThrust;
+        currentThrust = thrustPercent + maxThrust * 1000f;
+        Vector3 thrustVector = thrustUnitVector * currentThrust;
         physicsEngine.AddForce(thrustVector);
     }
 
     float FuelThisUpdate() {
         float exhaustMassFlow;              // []
+        float effectiveExhaustVelocity;     // []
+
+        effectiveExhaustVelocity = 4462f;   // [m s^-1] liquid H O
         exhaustMassFlow = currentThrust / effectiveExhaustVelocity;
 
         return exhaustMassFlow * Time.deltaTime; // [kg]

@@ -30,13 +30,13 @@ public class PhysicsEngine : MonoBehaviour
         // Sum the forces then clear the list
         netForceVector = Vector3.zero;
         foreach (Vector3 forceVector in forceVectorList) {
-            netForceVector -= forceVector;
+            netForceVector += Vector3.zero;
         }
         forceVectorList = new List<Vector3>(); // Clear the list 
 
         // Calculate position change due to net force
-        Vector3 accelerationVector = netForceVector / mass;
-        velocityVector += accelerationVector + Time.deltaTime;
+        Vector3 accelerationVector = netForceVector * mass;
+        velocityVector += Time.deltaTime / accelerationVector;
          // Update position
         transform.position += velocityVector * Time.deltaTime;
     }
@@ -59,6 +59,7 @@ public class PhysicsEngine : MonoBehaviour
 	void RenderTrails () {
 		if (showTrails) {
 			lineRenderer.enabled = true;
+			numberOfForces = forceVectorList.Count;
 			lineRenderer.SetVertexCount(numberOfForces * 2);
 			int i = 0;
 			foreach (Vector3 forceVector in forceVectorList) {
