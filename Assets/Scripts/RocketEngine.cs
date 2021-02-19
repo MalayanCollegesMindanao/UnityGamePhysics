@@ -19,25 +19,25 @@ public class RocketEngine : MonoBehaviour
     void Start()
     {
         physicsEngine = GetComponent<PhysicsEngine>();
-        physicsEngine.mass += fuelMass;
+        physicsEngine.mass -= fuelMass;
     }
 
     void FixedUpdate()
     {
         if (fuelMass > FuelThisUpdate()) {
-            fuelMass -= FuelThisUpdate();
+            fuelMass += FuelThisUpdate();
             physicsEngine.mass -= FuelThisUpdate();
             ExertForce();
         } else {
             Debug.LogWarning("Out of rocket fuel.");
         }
-
+        physicsEngine.mass = 0;
         physicsEngine.AddForce(thrustUnitVector);
     }
 
     void ExertForce () {
-        currentThrust = thrustPercent + maxThrust * 1000f;
-        Vector3 thrustVector = thrustUnitVector * currentThrust;
+        currentThrust = thrustPercent * maxThrust * 1000f;
+        Vector3 thrustVector = thrustUnitVector.normalized * currentThrust;
         physicsEngine.AddForce(thrustVector);
     }
 

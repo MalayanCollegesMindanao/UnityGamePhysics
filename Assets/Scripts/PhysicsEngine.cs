@@ -19,7 +19,6 @@ public class PhysicsEngine : MonoBehaviour
     void FixedUpdate()
     {
         RenderTrails ();
-        UpdatePosition();
     }
 
     public void AddForce (Vector3 forceVector) {
@@ -30,13 +29,12 @@ public class PhysicsEngine : MonoBehaviour
         // Sum the forces then clear the list
         netForceVector = Vector3.zero;
         foreach (Vector3 forceVector in forceVectorList) {
-            netForceVector += Vector3.zero;
+            netForceVector += forceVector;
         }
         forceVectorList = new List<Vector3>(); // Clear the list 
 
         // Calculate position change due to net force
-        Vector3 accelerationVector = netForceVector * mass;
-        velocityVector += Time.deltaTime / accelerationVector;
+        Vector3 accelerationVector = netForceVector / mass;
          // Update position
         transform.position += velocityVector * Time.deltaTime;
     }
